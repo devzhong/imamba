@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mamba.imamba.dao.UserDao">
+
+    <insert id="create" parameterType="com.mamba.imamba.po.UserPO">
+        insert into user(username, password, phone)
+        values
+            (#{username}, #{password}, #{phone})
+    </insert>
+
+    <select id="findByPhone" parameterType="java.lang.String" resultType="com.mamba.imamba.po.UserPO">
+        select * from `user`
+        where phone = #{phone}
+        limit 1
+    </select>
+
+    <select id="all" parameterType="com.mamba.imamba.vo.search.SearchUserVO" resultType="com.mamba.imamba.po.UserPO">
+        select * from user where 1=1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="username != null">
+            <if test="username != ''">
+                and username LIKE CONCAT('%', #{username}, '%')
+            </if>
+        </if>
+        <if test="phone != null">
+            <if test="phone != ''">
+                and phone LIKE CONCAT('%', #{phone}, '%')
+            </if>
+        </if>
+        order by createTime desc
+    </select>
+
+    <update id="update" parameterType="com.mamba.imamba.po.UserPO">
+        update user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from  user
+        where id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="java.lang.Integer" resultType="com.mamba.imamba.po.UserPO">
+        select * from user
+        where id = #{id}
+    </select>
+
+    <select id="findByUsername" parameterType="java.lang.String" resultType="com.mamba.imamba.po.UserPO">
+        select * from user
+        where username = #{username}
+    </select>
+
+</mapper>
